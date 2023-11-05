@@ -5,13 +5,24 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Pinpoint.Core.Results;
+using Pinpoint.Core;
+using System.Reflection;
+using System.Threading;
 
 namespace Pinpoint.Linux
 {
     public class PipeReader
     {
 
-        public void Listen()
+        private readonly PluginEngine _pluginEngine;
+
+        public PipeReader(PluginEngine pluginEngine)
+        {
+            _pluginEngine = pluginEngine;
+        }
+
+        public async Task ListenAsync()
         {
 
             string pipeName = "df";
@@ -25,24 +36,22 @@ namespace Pinpoint.Linux
                 using var reader = new StreamReader(pipeClient);
                 while (true)
                 {
-                    string request = "Hello, Server!";
-                    Console.WriteLine($"Sending request: {request}");
-                    writer.WriteLine(request);
-                    writer.Flush();
-
-                    // Read the response from the server
                     string response = reader.ReadLine();
-                    Console.WriteLine($"Received response: {response}");
+
+                    var query = new Query(response.Trim());
+                    if (query.IsEmpty) continue;
+
+                    await foreach (var result in _pluginEngine.RunPlugins(CancellationToken.None, query))
+                    {
+                        writer.WriteLine(result.Title); //TODO fix
+                    }
+                    writer.Flush();
                 }
-
-                
-
-
-                
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
+                throw;
             }
         }
     }
