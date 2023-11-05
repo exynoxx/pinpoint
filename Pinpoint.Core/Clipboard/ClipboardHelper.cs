@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Threading.Tasks;
 using FontAwesome5;
 using Pinpoint.Core.Results;
 
@@ -24,7 +21,7 @@ namespace Pinpoint.Core.Clipboard
             _ = Task.Run(async () =>
               {
                   await Task.Delay(50);
-                  SendKeys.SendWait("^{v}");
+                  //SendKeys.SendWait("^{v}"); //TODO reintroduce
               });
         }
 

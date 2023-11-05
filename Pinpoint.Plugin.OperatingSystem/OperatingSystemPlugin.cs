@@ -3,7 +3,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using FontAwesome5;
 using Pinpoint.Core;
 using Pinpoint.Core.Results;
@@ -82,7 +81,8 @@ namespace Pinpoint.Plugin.OperatingSystem
 
             public override void OnSelect()
             {
-                Application.SetSuspendState(PowerState.Hibernate, true, true);
+                //TODO reintroduce
+                //Application.SetSuspendState(PowerState.Hibernate, true, true);
             }
 
             public override EFontAwesomeIcon FontAwesomeIcon { get; } = EFontAwesomeIcon.Regular_Moon;
